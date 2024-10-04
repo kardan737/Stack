@@ -14,24 +14,28 @@ bool StackAssert(my_stack* stk)
 
     if (stk->addr == nullptr)
         {
+        stk->error = false;
         printf("null addr stack");
         return false;
         }
 
     if (stk->sizee < 0)
         {
+        stk->error = false;
         printf("size less than zero");
         return false;
         }
 
     if (stk->sizee > stk->capasity)
         {
+        stk->error = false;
         printf("capasity less than size");
         return false;
         }
 
     if (stk->capasity < min_capasity)
         {
+        stk->error = false;
         printf("capasity less than min size capasity");
         return false;
         }
@@ -42,23 +46,16 @@ bool StackAssert(my_stack* stk)
 
 /*void StackDump(my_stack* stk, char* file, char* func, int line)
     {
+    if
     printf("Error in file <%s>;in function <%s>;in line <%d>", file, func, line);
 
     printf("Problem in:");
 
-    if (stk == nullptr)
-        printf("stack ");
+    StackAssert(stk);
 
-    if (stk->error == ADDR)
-        printf("ADDR was not declarated");
-
-    if (stk->error == SIZEE)
-        printf("ADDR was not declarated");
-
-    if (stk->error == CAPASITY)
-        printf("ADDR was not declarated");
-
-    printf();
+    printf("addr stack: <%>", .....);
+    printf("capasity stack: <%>", .....);
+    printf("size stack: <%>", .....);
 
     }*/
 

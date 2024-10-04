@@ -5,24 +5,6 @@
 #include "stack.h"
 #include "verify.h"
 
-int main()
-    {
-    my_stack stk = {};
-
-    StackCtor(&stk, min_capasity);
-
-    if (!StackPush(&stk, 5)) return -1;  ///////?????
-    StackPush(&stk, 52);
-
-    //StackDump(__);
-
-    printf("%d " ,StackPop(&stk));
-    printf("%d " ,StackPop(&stk));
-
-    StackDtor(&stk);
-
-    }
-
 
 bool StackCtor(my_stack* stk, int min_capasity)
     {
@@ -38,6 +20,7 @@ bool StackCtor(my_stack* stk, int min_capasity)
 
     stk->capasity = min_capasity;
     stk->sizee = 0;
+    stk->error = true;
 
     return StackAssert(stk);
 
@@ -47,8 +30,6 @@ bool StackCtor(my_stack* stk, int min_capasity)
 bool StackPush(my_stack* stk, int new_element)
     {
     if (!StackAssert) return false;
-
-    assert(stk != nullptr);
 
     if (stk->sizee == stk->capasity)
         ExtendMemory(stk);
@@ -65,17 +46,15 @@ bool StackPush(my_stack* stk, int new_element)
 
 int StackPop(my_stack* stk)
     {
-    assert(stk != nullptr);
-
+    if (!StackAssert) return false;
     if (stk->sizee == 0)
         {
         printf("ZERO_STACK");
         return -1;   ////////////////////??????????????????
         }
 
-    if (!StackAssert) return false;
 
-    if ((stk->sizee * 4 <= stk->capasity) && (stk->sizee >= min_capasity));
+    if ((stk->sizee * 4 <= stk->capasity) && (stk->sizee >= min_capasity))
         StackCut(stk);
 
     stk->sizee--;
@@ -89,7 +68,6 @@ int StackPop(my_stack* stk)
 
 bool ExtendMemory(my_stack* stk)
     {
-    assert(stk != nullptr);
     if (!StackAssert) return false;
 
     stk->capasity = stk->capasity * 2;
@@ -104,7 +82,6 @@ bool ExtendMemory(my_stack* stk)
 
 bool StackCut(my_stack* stk)
     {
-    assert(stk != nullptr);
     if (!StackAssert) return false;
 
     stk->capasity = stk->capasity / 2;
@@ -119,27 +96,8 @@ bool StackCut(my_stack* stk)
 
 bool StackDtor(my_stack* stk)
     {
-    assert(stk != nullptr);
     if (!StackAssert) return false;
 
     free(stk);
-    return true; //stk->addr????????
-    }
+    return true;
 
-//if ((stk->sizee * 4 <= stk->capasity) && (stk->sizee >= min_capasity));
-//        StackCut(stk);
-//
-//s c
-//0 16
-//...
-//15 16
-//16 32
-//...
-//127 128
-//126 128
-//..
-//65 128
-//...
-//33
-//32 64
-//33 64

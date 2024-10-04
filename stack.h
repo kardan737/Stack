@@ -1,9 +1,17 @@
+#ifndef STACK_H
+#define STACK_H
+
+
 struct my_stack
     {
+    //long long left_struck_chica;    and stack
+
     int* addr;
-    int  sizee;
-    int  capasity;
-    //int  error;
+    size_t  sizee;
+    size_t  capasity;
+    bool error;  ///!!!!
+
+    //long long right_struct_chika;   and stack
 
     };
 
@@ -17,4 +25,4 @@ bool ExtendMemory(my_stack* stk);
 bool StackCut(my_stack* stk);
 bool StackDtor(my_stack* stk);
 
-
+#endif
