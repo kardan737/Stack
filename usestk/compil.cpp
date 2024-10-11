@@ -13,16 +13,32 @@ enum comand
 
     };
 
-int main()
+int main(int argc, char* argv[])
     {
-    FILE* in = fopen("com.txt", "r");
-    FILE* out = fopen("compil.txt", "w+");
+    const char* file_name_in;
+
+    if (argc <= 1 || argc > 3)
+        file_name_in = "com.txt";
+    else
+        file_name_in = argv[1];
+
+    FILE *in = fopen(file_name_in, "r");
 
     if (!in)
         {
         printf("OPENING_ERROR");
         return -1;
         }
+
+
+    const char* file_name_out;
+
+    if (argc <= 2 || argc > 3)
+        file_name_out = "compil.txt";
+    else
+        file_name_out = argv[2];
+
+    FILE* out = fopen(file_name_out, "w+");
 
     while(1)
         {
