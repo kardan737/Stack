@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "stack.h"
 #include "verify.h"
@@ -9,11 +10,15 @@ enum comand
     PUSH = 1,
     ADD  = 2,
     SUB  = 3,
-    DIV  = 4,
-    OUT = 5,
-    HLT = 6,
-
-
+    MUL  = 4,
+    DIV  = 5,
+    SQRT = 6,
+    SIN  = 7,
+    COS  = 8,
+    IN   = 9,
+    DUMP = 10,
+    OUT  = 11,
+    HLT  = 13,
     };
 
 int main(int argc, char* argv[])
@@ -62,12 +67,49 @@ int main(int argc, char* argv[])
             StackPush(&stk, b - a);
             }
 
+        else if (cmd == MUL)
+            {
+            int a = StackPop(&stk);
+            int b = StackPop(&stk);
+            StackPush(&stk, a * b);
+            }
+
         else if (cmd == DIV)
             {
             int a = StackPop(&stk);
             int b = StackPop(&stk);
             StackPush(&stk, b / a);
             }
+
+        else if (cmd == SQRT)
+            {
+            int a = StackPop(&stk);
+            StackPush(&stk, sqrt(a));
+            }
+
+        else if (cmd == SIN)
+            {
+            int a = StackPop(&stk);
+            StackPush(&stk, sin(a));
+            }
+
+        else if (cmd == COS)
+            {
+            int a = StackPop(&stk);
+            StackPush(&stk, cos(a));
+            }
+
+        else if (cmd == IN)
+            {
+            int a = 0;
+            scanf("enter a number: %d", &a);
+            StackPush(&stk, a);
+            }
+
+        /*else if (cmd == DUMP)
+            {
+            StackDump(&stk);
+            }*/
 
         else if (cmd == OUT)
             {
