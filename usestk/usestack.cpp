@@ -1,132 +1,190 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 
-#include "stack.h"
-#include "verify.h"
+#include "../headers/stack.h"
+#include "../headers/verify.h"
 
-enum comand
+#include "../headers/processor.h"
+
+struct mask
     {
-    PUSH = 1,
-    ADD  = 2,
-    SUB  = 3,
-    MUL  = 4,
-    DIV  = 5,
-    SQRT = 6,
-    SIN  = 7,
-    COS  = 8,
-    IN   = 9,
-    DUMP = 10,
-    OUT  = 11,
-    HLT  = 13,
+    char name;
+    int value;
     };
+
+struct my_spu
+    {
+
+    int* registers;
+    size_t ip;
+    int* assm;
+    mask* masks;
+    my_stack* stk;
+    };
+
+int SpuCtor(my_spu* spu, signature* head, FILE* in);
 
 int main(int argc, char* argv[])
     {
-    my_stack stk ={};
+/*
+
+    spu.registers[10] = {};
+    spu.masks    ;*/
+
+    my_stack stk = {};
     StackCtor(&stk, MIN_CAPASITY);
 
-    const char* instruction;
+    const char* instruction = "";
 
     if (argc != 2)
-        instruction = "compil.txt";
+        instruction = "../file/compil.txt";
     else
         instruction = argv[1];
 
-    FILE *in = fopen(instruction, "r");
-
+    FILE *in = fopen(instruction, "rb");
     if (!in)
         {
         printf("OPENING_ERROR");
         return -1;
         }
 
-    while(1)
+    my_spu spu = {};
+
+    signature head = {};
+    SpuCtor(&spu, &head, in);
+
+    bool runWhile = true;
+    while(runWhile)
         {
-        int cmd = 0;
-        fscanf(in, "%d", &cmd);
+        int cmd = spu.assm[spu.ip++];
 
-        if (cmd == PUSH)
+        switch(cmd)
             {
-            int arg = 0;
-            fscanf(in, "%d", &arg);
-            StackPush(&stk, arg);
-            }
+            case PUSH:
+                {
+                int arg = spu.assm[spu.ip++];
+                StackPush(&stk, arg);
+                break;
+                }
 
-        else if (cmd == ADD)
-            {
-            int a = StackPop(&stk);
-            int b = StackPop(&stk);
-            StackPush(&stk, a + b);
-            }
+            case ADD:
+                {
+                int a = StackPop(&stk);
+                int b = StackPop(&stk);
+                StackPush(&stk, a + b);
+                break;
+                }
 
-        else if (cmd == SUB)
-            {
-            int a = StackPop(&stk);
-            int b = StackPop(&stk);
-            StackPush(&stk, b - a);
-            }
+            case SUB:
+                {
+                int a = StackPop(&stk);
+                int b = StackPop(&stk);
+                StackPush(&stk, b - a);
+                break;
+                }
 
-        else if (cmd == MUL)
-            {
-            int a = StackPop(&stk);
-            int b = StackPop(&stk);
-            StackPush(&stk, a * b);
-            }
+            case MUL:
+                {
+                int a = StackPop(&stk);
+                int b = StackPop(&stk);
+                StackPush(&stk, a * b);
+                break;
+                }
 
-        else if (cmd == DIV)
-            {
-            int a = StackPop(&stk);
-            int b = StackPop(&stk);
-            StackPush(&stk, b / a);
-            }
+            case DIV:
+                {
+                int a = StackPop(&stk);
+                int b = StackPop(&stk);
+                StackPush(&stk, b / a);
+                break;
+                }
 
-        else if (cmd == SQRT)
-            {
-            int a = StackPop(&stk);
-            StackPush(&stk, sqrt(a));
-            }
+            case SQRT:
+                {
+                int a = StackPop(&stk);
+                StackPush(&stk, sqrt(a));
+                break;
+                }
 
-        else if (cmd == SIN)
-            {
-            int a = StackPop(&stk);
-            StackPush(&stk, sin(a));
-            }
+            case SIN:
+                {
+                int a = StackPop(&stk);
+                StackPush(&stk, sin(a));
+                break;
+                }
 
-        else if (cmd == COS)
-            {
-            int a = StackPop(&stk);
-            StackPush(&stk, cos(a));
-            }
+            case COS:
+                {
+                int a = StackPop(&stk);
+                StackPush(&stk, cos(a));
+                break;
+                }
 
-        else if (cmd == IN)
-            {
-            int a = 0;
-            scanf("enter a number: %d", &a);
-            StackPush(&stk, a);
-            }
+            case IN:
+                {
+                int a = 0;
+                scanf("enter a number: %d", &a);
+                StackPush(&stk, a);
+                break;
+                }
 
-        /*else if (cmd == DUMP)
+        /*case DUMP:
             {
             StackDump(&stk);
             }*/
 
-        else if (cmd == OUT)
-            {
-            printf("result = %d\n", StackPop(&stk));
-            }
+            case OUT:
+                printf("result = %d\n", StackPop(&stk));
+                runWhile = false;
+                break;
 
-        else if (cmd == HLT)
-            {
-            break;
-            }
+            case HLT:
+                runWhile = false;
+                break;
 
-        else
-            {
-            printf("SIN_TERROR\n");
-            break;
-            }
+            default:
+                printf("SIN_TERROR\n");
+                runWhile = false;
+                break;
 
+            }
         }
     }
 
+int SpuCtor(my_spu* spu, signature* head, FILE* in)
+    {
+    spu->ip = 0;
+
+    fread(&head->sig, sizeof(long long), 1, in);
+    if (head->sig != QQQQ)
+        {
+        printf("signa");
+        return -1;
+        }
+
+    fread(&head->versComand, sizeof(size_t), 1, in);
+    if (head->versComand != QQQQ)
+        {
+        printf("vers");
+        return -1;
+        }
+
+    fread(&head->sizee, sizeof(size_t), 1, in);
+
+    spu->assm = (int*)calloc(head->sizee, sizeof(int));
+    if (spu->assm == nullptr)
+        {
+        printf("MEMORY_ALLOCATION_ERROR");
+        return -1;
+        }
+
+    int result = fread(spu->assm, sizeof(int), head->sizee, in);
+    if (result != head->sizee)
+        {
+        printf("READING_ASM_ERROR");
+        return -1;
+        }
+
+    }
