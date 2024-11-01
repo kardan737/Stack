@@ -1,0 +1,84 @@
+in
+in
+in
+pop cx
+pop bx
+pop ax
+
+push bx
+push bx
+mul
+
+push 4
+push ax
+mul
+push cx
+mul
+
+sub
+
+pop dx
+
+push 0
+push dx
+ja null;
+
+push 0
+push dx
+je one;
+
+push 0 
+push dx
+jb two;
+
+null;
+jmp exit;
+
+one;
+push -1
+push bx
+mul
+
+push 2
+push ax
+mul
+
+div
+out
+jmp exit;
+
+two;
+push dx
+sqrt
+pop dx
+
+push -1
+push bx
+mul
+
+push dx
+add
+
+push 2
+push ax
+mul
+div
+out
+
+push -1
+push bx
+mul
+
+push dx
+sub
+
+push 2
+push ax
+mul
+div
+out
+exit;
+
+
+exit;
+hlt

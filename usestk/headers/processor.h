@@ -1,43 +1,69 @@
 enum comand
     {
     PUSH = 1,
-    ADD  = 2,
-    SUB  = 3,
-    MUL  = 4,
-    DIV  = 5,
-    SQRT = 6,
-    SIN  = 7,
-    COS  = 8,
-    IN   = 9,
-    OUT  = 10,
-    DUMP = 11,
-    HLT  = 12,
-    JA   = 13,
-    JAE  = 14,
-    JB   = 15,
-    JBE  = 16,
-    JE   = 17,
-    JNE  = 18,
-    JMP  = 19,
+    POP  = 2,
+    ADD  = 3,
+    SUB  = 4,
+    MUL  = 5,
+    DIV  = 6,
+    SQRT = 7,
+    SIN  = 8,
+    COS  = 9,
+    IN   = 10,
+    OUT  = 11,
+    DUMP = 12,
+    HLT  = 13,
+    JA   = 14,
+    JAE  = 15,
+    JB   = 16,
+    JBE  = 17,
+    JE   = 18,
+    JNE  = 19,
+    JMP  = 20,
+    CALL = 21,
+    RET  = 22,
     };
 
-const size_t MIN_CAPASITYY = 150000;
-//const size_t SIGNATURE = 4;
-//const size_t VERSION_COM = 2;
+enum registers
+    {
+    AX = 1,
+    BX = 2,
+    CX = 3,
+    DX = 4,
+    EX = 5,
+    FX = 6,
+    GX = 7,
+    HX = 8,
+    };
+
+enum value
+    {
+    REG             = 1,
+    NUM             = 2,
+    REG_NUM         = 3,
+    BRACKET         = 4,
+    REG_BRACKET     = 5,
+    NUM_BRACKET     = 6,
+    REG_NUM_BRACKET = 7,
+    };
+
+const size_t MIN_CAPASITYY = 15000;
+const long long SIGNATURE = 0x584F4C444544;
+const size_t VERSION_COM = 2;
 const size_t LENGTH_ARRAY_MASKS = 20;
 
 struct ass_mas
     {
     int* code;
-    size_t capacity;
-    size_t sizee;
+    size_t capasity;
+    int sizee;
     };
 
 struct signature
     {
     long long sig;
     size_t versComand;
-    size_t sizee;
+    int sizee;
     };
 
 struct masks

@@ -1,0 +1,37 @@
+in
+
+pop ax
+push ax
+pop bx
+
+call fuck;
+
+fuck;
+
+
+
+
+push 1
+push bx
+jae exit;
+
+push bx
+push 1
+sub
+pop bx
+
+push bx
+push ax
+mul
+
+pop ax
+
+call fuck;
+
+ret
+
+
+exit;
+push ax
+out
+hlt
